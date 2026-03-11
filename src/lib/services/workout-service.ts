@@ -81,6 +81,28 @@ export function updateExerciseSet(
   return next;
 }
 
+/** Mark entire exercise as done with default sets/reps (no custom weight/reps). */
+export function markExerciseDoneWithDefaults(
+  workout: WorkoutDay,
+  exerciseIndex: number
+): WorkoutDay {
+  const next = { ...workout, exerciseLogs: [...workout.exerciseLogs] };
+  const ex = next.exerciseLogs[exerciseIndex];
+  if (!ex) return workout;
+  next.exerciseLogs[exerciseIndex] = {
+    ...ex,
+    sets: ex.sets.map(() => ({ completed: true })),
+  };
+  next.updatedAt = now();
+  return next;
+}
+
+/** Check if all sets of an exercise are completed. */
+export function isExerciseFullyCompleted(workout: WorkoutDay, exerciseIndex: number): boolean {
+  const ex = workout.exerciseLogs[exerciseIndex];
+  return ex?.sets.every((s) => s.completed) ?? false;
+}
+
 export function getAllWorkoutDays(): WorkoutDay[] {
   return StorageManager.getWorkoutDays();
 }
