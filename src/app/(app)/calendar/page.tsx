@@ -43,14 +43,14 @@ export default function CalendarPage() {
   }, [viewDate]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-white">Calendar</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Calendar</h1>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setViewDate(subMonths(viewDate, 1))}
-            className="rounded-lg border border-surface-200/20 px-3 py-2 text-sm font-medium text-white hover:bg-surface-800"
+            className="btn-ghost py-2 px-3"
           >
             ←
           </button>
@@ -60,19 +60,17 @@ export default function CalendarPage() {
           <button
             type="button"
             onClick={() => setViewDate(addMonths(viewDate, 1))}
-            className="rounded-lg border border-surface-200/20 px-3 py-2 text-sm font-medium text-white hover:bg-surface-800"
+            className="btn-ghost py-2 px-3"
           >
             →
           </button>
         </div>
       </div>
 
-      <div className="rounded-xl border border-surface-200/10 bg-surface-800 overflow-hidden">
-        <div className="grid grid-cols-7 text-center text-sm font-medium text-surface-400 border-b border-surface-200/10">
+      <div className="card overflow-hidden">
+        <div className="grid grid-cols-7 text-center text-sm font-medium text-surface-400 border-b border-white/[0.06]">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div key={day} className="py-2">
-              {day}
-            </div>
+            <div key={day} className="py-3">{day}</div>
           ))}
         </div>
         <div className="grid grid-cols-7">
@@ -86,30 +84,30 @@ export default function CalendarPage() {
             return (
               <div
                 key={dateStr}
-                className={`min-h-[80px] border-b border-r border-surface-200/10 p-1 ${
-                  isSameMonth(day, viewDate) ? 'bg-surface-800' : 'bg-surface-900/50'
+                className={`min-h-[80px] border-b border-r border-white/[0.06] p-1.5 last:border-r-0 ${
+                  isSameMonth(day, viewDate) ? 'bg-surface-800/50' : 'bg-surface-900/30'
                 }`}
               >
                 <Link
                   href={`/workouts?date=${dateStr}`}
-                  className={`block rounded p-1 text-sm ${
-                    isToday(day) ? 'ring-1 ring-accent' : ''
+                  className={`block rounded-lg p-1.5 text-sm transition-colors hover:bg-white/5 ${
+                    isToday(day) ? 'ring-1 ring-accent bg-accent/10 text-accent font-semibold' : ''
                   } ${!isSameMonth(day, viewDate) ? 'text-surface-500' : 'text-white'}`}
                 >
                   {format(day, 'd')}
                 </Link>
-                <div className="flex flex-wrap gap-0.5 mt-0.5">
+                <div className="flex flex-wrap gap-1 mt-1">
                   {hasWorkout && (
-                    <span className="rounded bg-accent/30 px-1 text-xs text-accent">W</span>
+                    <span className="rounded-md bg-accent/25 px-1.5 py-0.5 text-[10px] font-medium text-accent">W</span>
                   )}
                   {hasNutrition && (
-                    <span className="rounded bg-blue-500/30 px-1 text-xs text-blue-300">N</span>
+                    <span className="rounded-md bg-blue-500/25 px-1.5 py-0.5 text-[10px] font-medium text-blue-300">N</span>
                   )}
                   {hasNote && (
-                    <span className="rounded bg-amber-500/30 px-1 text-xs text-amber-300">Note</span>
+                    <span className="rounded-md bg-amber-500/25 px-1.5 py-0.5 text-[10px] font-medium text-amber-300">Note</span>
                   )}
                   {isSameMonth(day, viewDate) && isRest && !hasWorkout && (
-                    <span className="text-surface-500 text-xs">Rest</span>
+                    <span className="text-surface-500 text-[10px]">Rest</span>
                   )}
                 </div>
               </div>
@@ -118,10 +116,10 @@ export default function CalendarPage() {
         </div>
       </div>
 
-      <div className="flex gap-4 text-sm text-surface-400">
-        <span><span className="inline-block w-4 h-4 rounded bg-accent/30 mr-1" /> Workout</span>
-        <span><span className="inline-block w-4 h-4 rounded bg-blue-500/30 mr-1" /> Nutrition</span>
-        <span><span className="inline-block w-4 h-4 rounded bg-amber-500/30 mr-1" /> Note</span>
+      <div className="flex flex-wrap gap-6 text-sm text-surface-400">
+        <span className="flex items-center gap-2"><span className="w-3 h-3 rounded bg-accent/30" /> Workout</span>
+        <span className="flex items-center gap-2"><span className="w-3 h-3 rounded bg-blue-500/30" /> Nutrition</span>
+        <span className="flex items-center gap-2"><span className="w-3 h-3 rounded bg-amber-500/30" /> Note</span>
       </div>
     </div>
   );

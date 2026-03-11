@@ -27,12 +27,12 @@ export default function DashboardPage() {
   }, [progressMetrics]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-2xl font-bold tracking-tight text-white">
           {isToday(today) ? "Today's overview" : format(today, 'EEEE, MMM d')}
         </h1>
-        <p className="text-surface-300 mt-1">
+        <p className="text-surface-400 mt-1 text-sm">
           {programDay?.label ?? 'Rest day'} · {todayStr}
         </p>
       </div>
@@ -40,66 +40,65 @@ export default function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Link
           href="/workouts"
-          className="rounded-xl border border-surface-200/10 bg-surface-800 p-5 transition hover:border-accent/30"
+          className="card card-hover p-5 block group"
         >
           <h2 className="font-semibold text-white">Workout</h2>
-          <p className="mt-1 text-sm text-surface-300">
+          <p className="mt-1 text-sm text-surface-400">
             {todayWorkout ? 'Logged' : programDay?.exercises.length ? 'Not logged' : 'Rest day'}
           </p>
-          <span className="mt-2 inline-block text-sm text-accent">View →</span>
+          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent opacity-90 group-hover:opacity-100">
+            View <span className="transition-transform group-hover:translate-x-0.5">→</span>
+          </span>
         </Link>
 
         <Link
           href="/nutrition"
-          className="rounded-xl border border-surface-200/10 bg-surface-800 p-5 transition hover:border-accent/30"
+          className="card card-hover p-5 block group"
         >
           <h2 className="font-semibold text-white">Nutrition</h2>
-          <p className="mt-1 text-sm text-surface-300">
+          <p className="mt-1 text-sm text-surface-400">
             {todayNutrition ? (todayNutrition.compliant ? 'Compliant' : 'Logged') : 'Not logged'}
           </p>
-          <span className="mt-2 inline-block text-sm text-accent">View →</span>
+          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent opacity-90 group-hover:opacity-100">
+            View <span className="transition-transform group-hover:translate-x-0.5">→</span>
+          </span>
         </Link>
 
         <Link
           href="/analytics"
-          className="rounded-xl border border-surface-200/10 bg-surface-800 p-5 transition hover:border-accent/30"
+          className="card card-hover p-5 block group"
         >
           <h2 className="font-semibold text-white">Bodyweight</h2>
-          <p className="mt-1 text-sm text-surface-300">
+          <p className="mt-1 text-sm text-surface-400">
             {latestWeight != null ? `${latestWeight} kg` : 'No data'}
           </p>
-          <span className="mt-2 inline-block text-sm text-accent">Analytics →</span>
+          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent opacity-90 group-hover:opacity-100">
+            Analytics <span className="transition-transform group-hover:translate-x-0.5">→</span>
+          </span>
         </Link>
 
         <Link
           href="/media"
-          className="rounded-xl border border-surface-200/10 bg-surface-800 p-5 transition hover:border-accent/30"
+          className="card card-hover p-5 block group"
         >
           <h2 className="font-semibold text-white">Progress media</h2>
-          <p className="mt-1 text-sm text-surface-300">Photos & videos</p>
-          <span className="mt-2 inline-block text-sm text-accent">Timeline →</span>
+          <p className="mt-1 text-sm text-surface-400">Photos & videos</p>
+          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent opacity-90 group-hover:opacity-100">
+            Timeline <span className="transition-transform group-hover:translate-x-0.5">→</span>
+          </span>
         </Link>
       </div>
 
       <section>
         <h2 className="text-lg font-semibold text-white mb-3">Quick actions</h2>
         <div className="flex flex-wrap gap-3">
-          <Link
-            href="/workouts"
-            className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-surface-900 hover:bg-accent-dark"
-          >
+          <Link href="/workouts" className="btn-primary">
             Log workout
           </Link>
-          <Link
-            href="/nutrition"
-            className="rounded-lg border border-surface-200/20 px-4 py-2 text-sm font-medium text-white hover:bg-surface-800"
-          >
+          <Link href="/nutrition" className="btn-ghost">
             Log nutrition
           </Link>
-          <Link
-            href="/notes"
-            className="rounded-lg border border-surface-200/20 px-4 py-2 text-sm font-medium text-white hover:bg-surface-800"
-          >
+          <Link href="/notes" className="btn-ghost">
             Daily note
           </Link>
         </div>

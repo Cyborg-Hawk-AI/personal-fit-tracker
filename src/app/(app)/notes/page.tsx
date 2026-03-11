@@ -25,41 +25,29 @@ export default function NotesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-white">Daily notes</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Daily notes</h1>
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handlePrev}
-            className="rounded-lg border border-surface-200/20 px-4 py-2 text-sm font-medium text-white hover:bg-surface-800"
-          >
-            ← Prev
-          </button>
-          <span className="min-w-[140px] text-center font-medium text-white">
+          <button type="button" onClick={handlePrev} className="btn-ghost py-2">← Prev</button>
+          <span className="min-w-[140px] text-center font-medium text-white text-sm">
             {format(new Date(selectedDate), 'EEE, MMM d')}
           </span>
-          <button
-            type="button"
-            onClick={handleNext}
-            className="rounded-lg border border-surface-200/20 px-4 py-2 text-sm font-medium text-white hover:bg-surface-800"
-          >
-            Next →
-          </button>
+          <button type="button" onClick={handleNext} className="btn-ghost py-2">Next →</button>
         </div>
       </div>
 
       {note && (
-        <div className="rounded-xl border border-surface-200/10 bg-surface-800 p-4">
+        <div className="card p-5">
           <textarea
             value={note.content}
             onChange={(e) => setNote({ ...note, content: e.target.value })}
             onBlur={handleSave}
             placeholder="Today's notes…"
             rows={12}
-            className="w-full rounded-lg border border-surface-200/20 bg-surface-900 px-4 py-3 text-white placeholder-surface-500 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            className="w-full rounded-xl border border-white/10 bg-surface-900/80 px-4 py-3 text-white placeholder-surface-500 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors"
           />
-          <p className="mt-2 text-sm text-surface-400">Saved automatically on blur.</p>
+          <p className="mt-2 text-sm text-surface-500">Saved automatically on blur.</p>
         </div>
       )}
     </div>

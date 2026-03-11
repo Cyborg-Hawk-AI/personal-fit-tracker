@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { format, subMonths } from 'date-fns';
+import { format } from 'date-fns';
 import {
   LineChart,
   Line,
@@ -12,10 +12,18 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-import { StorageManager } from '@/lib/storage/storage-manager';
 import { getAllWorkoutDays } from '@/lib/services/workout-service';
 import { getOrCreateMetricForDate, saveMetric, getAllMetrics } from '@/lib/services/metrics-service';
 import type { WorkoutDay } from '@/lib/schema/types';
+
+const CHART_COLORS = {
+  grid: 'rgba(255,255,255,0.06)',
+  axis: '#9ca3af',
+  tooltipBg: '#16191f',
+  tooltipBorder: 'rgba(255,255,255,0.1)',
+  accent: '#00d4aa',
+  accentSecondary: '#3b82f6',
+};
 
 export default function AnalyticsPage() {
   const [metrics, setMetrics] = useState(() => getAllMetrics());
@@ -39,7 +47,6 @@ export default function AnalyticsPage() {
 
   const exerciseHistory = useMemo(() => {
     if (!selectedExercise) return [];
-    const out: { date: string; displayDate: string; bestWeight?: number; totalVolume?: number }[] = [];
     const byDate = new Map<string, { bestWeight?: number; volume: number }>();
     for (const w of workoutDays) {
       for (const ex of w.exerciseLogs) {
@@ -87,19 +94,19 @@ export default function AnalyticsPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-2xl font-bold text-white">Progress analytics</h1>
+    <div className="space-y-8 animate-fade-in">
+      <h1 className="text-2xl font-bold tracking-tight text-white">Progress analytics</h1>
 
-      <section className="rounded-xl border border-surface-200/10 bg-surface-800 p-4">
-        <h2 className="font-semibold text-white mb-3">Bodyweight</h2>
-        <div className="flex flex-wrap gap-3 items-end mb-4">
+      <section className="card p-5">
+        <h2 className="font-semibold text-white mb-4">Bodyweight</h2>
+        <div className="flex flex-wrap gap-3 items-end mb-5">
           <div>
             <label className="block text-sm text-surface-400 mb-1">Date</label>
             <input
               type="date"
               value={bodyweightDate}
               onChange={(e) => setBodyweightDate(e.target.value)}
-              className="rounded border border-surface-200/20 bg-surface-900 px-3 py-2 text-white"
+              className="rounded-xl border border-white/10 bg-surface-900/80 px-3 py-2 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
             />
           </div>
           <div>
@@ -110,14 +117,10 @@ export default function AnalyticsPage() {
               value={bodyweightValue}
               onChange={(e) => setBodyweightValue(e.target.value)}
               placeholder="e.g. 82.5"
-              className="rounded border border-surface-200/20 bg-surface-900 px-3 py-2 text-white w-24"
+              className="rounded-xl border border-white/10 bg-surface-900/80 px-3 py-2 text-white w-24 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
             />
           </div>
-          <button
-            type="button"
-            onClick={handleSaveBodyweight}
-            className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-surface-900 hover:bg-accent-dark"
-          >
+          <button type="button" onClick={handleSaveBodyweight} className="btn-primary py-2">
             Save
           </button>
         </div>
@@ -125,21 +128,21 @@ export default function AnalyticsPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={bodyweightData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#33403c" />
-                <XAxis dataKey="displayDate" stroke="#94a3a0" fontSize={12} />
-                <YAxis stroke="#94a3a0" fontSize={12} domain={['auto', 'auto']} />
+                <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
+                <XAxis dataKey="displayDate" stroke={CHART_COLORS.axis} fontSize={12} />
+                <YAxis stroke={CHART_COLORS.axis} fontSize={12} domain={['auto', 'auto']} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#1a2320', border: '1px solid #33403c' }}
-                  labelStyle={{ color: '#eef2f1' }}
+                  contentStyle={{ backgroundColor: CHART_COLORS.tooltipBg, border: `1px solid ${CHART_COLORS.tooltipBorder}`, borderRadius: '12px' }}
+                  labelStyle={{ color: '#f4f5f7' }}
                 />
                 <Legend />
                 <Line
                   type="monotone"
                   dataKey="weight"
                   name="Bodyweight (kg)"
-                  stroke="#22c55e"
+                  stroke={CHART_COLORS.accent}
                   strokeWidth={2}
-                  dot={{ fill: '#22c55e' }}
+                  dot={{ fill: CHART_COLORS.accent }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -147,13 +150,13 @@ export default function AnalyticsPage() {
         )}
       </section>
 
-      <section className="rounded-xl border border-surface-200/10 bg-surface-800 p-4">
-        <h2 className="font-semibold text-white mb-3">Exercise progression</h2>
+      <section className="card p-5">
+        <h2 className="font-semibold text-white mb-4">Exercise progression</h2>
         <div className="mb-4">
           <select
             value={selectedExercise}
             onChange={(e) => setSelectedExercise(e.target.value)}
-            className="rounded border border-surface-200/20 bg-surface-900 px-3 py-2 text-white"
+            className="rounded-xl border border-white/10 bg-surface-900/80 px-3 py-2 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
           >
             <option value="">Select exercise</option>
             {exerciseNames.map((name) => (
@@ -167,20 +170,20 @@ export default function AnalyticsPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={exerciseHistory}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#33403c" />
-                <XAxis dataKey="displayDate" stroke="#94a3a0" fontSize={12} />
-                <YAxis stroke="#94a3a0" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} />
+                <XAxis dataKey="displayDate" stroke={CHART_COLORS.axis} fontSize={12} />
+                <YAxis stroke={CHART_COLORS.axis} fontSize={12} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#1a2320', border: '1px solid #33403c' }}
+                  contentStyle={{ backgroundColor: CHART_COLORS.tooltipBg, border: `1px solid ${CHART_COLORS.tooltipBorder}`, borderRadius: '12px' }}
                 />
                 <Legend />
                 <Line
                   type="monotone"
                   dataKey="bestWeight"
                   name="Best set weight (kg)"
-                  stroke="#3b82f6"
+                  stroke={CHART_COLORS.accentSecondary}
                   strokeWidth={2}
-                  dot={{ fill: '#3b82f6' }}
+                  dot={{ fill: CHART_COLORS.accentSecondary }}
                 />
               </LineChart>
             </ResponsiveContainer>

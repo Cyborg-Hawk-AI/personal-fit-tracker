@@ -80,25 +80,17 @@ export default function WorkoutsPage() {
   const programDay = getProgramDayForDate(new Date(selectedDate));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-white">Workout</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Workout</h1>
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handlePrev}
-            className="rounded-lg border border-surface-200/20 px-4 py-2 text-sm font-medium text-white hover:bg-surface-800"
-          >
+          <button type="button" onClick={handlePrev} className="btn-ghost py-2">
             ← Prev
           </button>
-          <span className="min-w-[140px] text-center font-medium text-white">
+          <span className="min-w-[140px] text-center font-medium text-white text-sm">
             {format(new Date(selectedDate), 'EEE, MMM d')}
           </span>
-          <button
-            type="button"
-            onClick={handleNext}
-            className="rounded-lg border border-surface-200/20 px-4 py-2 text-sm font-medium text-white hover:bg-surface-800"
-          >
+          <button type="button" onClick={handleNext} className="btn-ghost py-2">
             Next →
           </button>
         </div>
@@ -107,33 +99,33 @@ export default function WorkoutsPage() {
       {!initialized ? (
         <p className="text-surface-400">Loading…</p>
       ) : programDay?.exercises.length === 0 ? (
-        <div className="rounded-xl border border-surface-200/10 bg-surface-800 p-8 text-center text-surface-300">
+        <div className="card p-8 text-center text-surface-400">
           Rest day — no exercises scheduled.
         </div>
       ) : workout ? (
         <div className="space-y-4">
-          <p className="text-surface-300">{workout.dayLabel}</p>
+          <p className="text-surface-400 text-sm">{workout.dayLabel}</p>
           {workout.exerciseLogs.map((ex, exIndex) => {
             const allDone = isExerciseFullyCompleted(workout, exIndex);
             const showCustom = expandedCustom === exIndex;
             return (
               <div
                 key={`${ex.exerciseName}-${exIndex}`}
-                className="rounded-xl border border-surface-200/10 bg-surface-800 p-4"
+                className="card p-5 transition-all duration-200 hover:border-white/[0.08]"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <h2 className="font-semibold text-white">{ex.exerciseName}</h2>
-                    <p className="text-sm text-surface-400">{formatPrescription(ex)}</p>
+                    <p className="text-sm text-surface-400 mt-0.5">{formatPrescription(ex)}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => handleDoneWithDefaults(exIndex)}
-                      className={`rounded-lg px-4 py-2 text-sm font-medium ${
+                      className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
                         allDone
-                          ? 'bg-accent text-surface-900'
-                          : 'border border-surface-200/20 text-surface-200 hover:bg-surface-700 hover:text-white'
+                          ? 'bg-accent text-surface-950 shadow-glow-accent-sm'
+                          : 'btn-ghost py-2'
                       }`}
                     >
                       {allDone ? '✓ Done' : 'Done'}
@@ -141,21 +133,21 @@ export default function WorkoutsPage() {
                     <button
                       type="button"
                       onClick={() => setExpandedCustom(showCustom ? null : exIndex)}
-                      className="rounded-lg border border-surface-200/20 px-3 py-2 text-sm text-surface-400 hover:text-white hover:bg-surface-700"
+                      className="rounded-xl border border-white/10 px-3 py-2 text-sm text-surface-400 hover:bg-white/5 hover:text-white transition-colors"
                     >
                       {showCustom ? 'Hide custom' : 'Log custom'}
                     </button>
                   </div>
                 </div>
                 {showCustom && (
-                  <div className="mt-4 space-y-2 border-t border-surface-200/10 pt-4">
+                  <div className="mt-5 space-y-2 border-t border-white/[0.06] pt-5">
                     <p className="text-xs text-surface-500">Optional: log reps and weight per set</p>
                     {ex.sets.map((set, setIndex) => (
                       <div
                         key={setIndex}
-                        className="flex flex-wrap items-center gap-3 rounded-lg bg-surface-900/50 px-3 py-2"
+                        className="flex flex-wrap items-center gap-3 rounded-xl bg-surface-900/60 px-3 py-2.5 border border-white/[0.04]"
                       >
-                        <span className="text-surface-400 w-8">Set {setIndex + 1}</span>
+                        <span className="text-surface-400 w-8 text-sm">Set {setIndex + 1}</span>
                         <input
                           type="number"
                           placeholder="Reps"
@@ -168,7 +160,7 @@ export default function WorkoutsPage() {
                               set.weight
                             )
                           }
-                          className="w-20 rounded border border-surface-200/20 bg-surface-800 px-2 py-1 text-white text-sm"
+                          className="w-20 rounded-lg border border-white/10 bg-surface-800 px-2.5 py-1.5 text-white text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                         />
                         <input
                           type="number"
@@ -182,15 +174,15 @@ export default function WorkoutsPage() {
                               e.target.value === '' ? undefined : Number(e.target.value)
                             )
                           }
-                          className="w-20 rounded border border-surface-200/20 bg-surface-800 px-2 py-1 text-white text-sm"
+                          className="w-20 rounded-lg border border-white/10 bg-surface-800 px-2.5 py-1.5 text-white text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
                         />
                         <button
                           type="button"
                           onClick={() => toggleSet(exIndex, setIndex)}
-                          className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+                          className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                             set.completed
-                              ? 'bg-accent text-surface-900'
-                              : 'border border-surface-200/20 text-surface-300 hover:bg-surface-700'
+                              ? 'bg-accent text-surface-950'
+                              : 'border border-white/10 text-surface-400 hover:bg-white/5 hover:text-white'
                           }`}
                         >
                           {set.completed ? 'Done' : 'Complete'}

@@ -37,7 +37,6 @@ export default function MediaPage() {
   );
 
   useEffect(() => {
-    const map: Record<string, string> = {};
     const toLoad = compareMode
       ? [
           ...getMediaEntriesByDate(compareDateA || ''),
@@ -50,10 +49,7 @@ export default function MediaPage() {
         if (!cancelled && url) setUrls((prev) => ({ ...prev, [entry.id]: url }));
       });
     });
-    return () => {
-      cancelled = true;
-      Object.values(map).forEach(URL.revokeObjectURL);
-    };
+    return () => { cancelled = true; };
   }, [compareMode, compareDateA, compareDateB, displayEntries]);
 
   const handlePrev = () => setSelectedDate((d) => format(subDays(new Date(d), 1), 'yyyy-MM-dd'));
@@ -92,15 +88,15 @@ export default function MediaPage() {
   const entriesB = compareDateB ? getMediaEntriesByDate(compareDateB) : [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-white">Progress media</h1>
-        <label className="flex cursor-pointer items-center gap-2 text-sm text-surface-300">
+        <h1 className="text-2xl font-bold tracking-tight text-white">Progress media</h1>
+        <label className="flex cursor-pointer items-center gap-2 text-sm text-surface-400 hover:text-white transition-colors">
           <input
             type="checkbox"
             checked={compareMode}
             onChange={(e) => setCompareMode(e.target.checked)}
-            className="rounded border-surface-200/20 text-accent"
+            className="rounded border-white/20 text-accent focus:ring-accent/40"
           />
           Compare two dates
         </label>
@@ -108,69 +104,53 @@ export default function MediaPage() {
 
       {compareMode ? (
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-surface-400 mb-1">Date A</label>
+          <div className="grid grid-cols-2 gap-5">
+            <div className="card p-4">
+              <label className="block text-sm text-surface-400 mb-2">Date A</label>
               <select
                 value={compareDateA ?? ''}
                 onChange={(e) => setCompareDateA(e.target.value || null)}
-                className="w-full rounded border border-surface-200/20 bg-surface-800 px-3 py-2 text-white"
+                className="w-full rounded-xl border border-white/10 bg-surface-900/80 px-3 py-2 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
               >
                 <option value="">Select</option>
                 {dateOptions.map((d) => (
-                  <option key={d} value={d}>
-                    {format(new Date(d), 'MMM d, yyyy')}
-                  </option>
+                  <option key={d} value={d}>{format(new Date(d), 'MMM d, yyyy')}</option>
                 ))}
               </select>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {entriesA
-                  .filter((e) => e.mediaType === 'photo')
-                  .map((e) => (
-                    <div key={e.id} className="relative">
-                      {urls[e.id] ? (
-                        <img
-                          src={urls[e.id]}
-                          alt=""
-                          className="h-40 w-auto rounded object-cover"
-                        />
-                      ) : (
-                        <div className="h-40 w-24 rounded bg-surface-700 animate-pulse" />
-                      )}
-                    </div>
-                  ))}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {entriesA.filter((e) => e.mediaType === 'photo').map((e) => (
+                  <div key={e.id} className="relative">
+                    {urls[e.id] ? (
+                      <img src={urls[e.id]} alt="" className="h-40 w-auto rounded-xl object-cover border border-white/[0.06]" />
+                    ) : (
+                      <div className="h-40 w-24 rounded-xl bg-surface-700/80 animate-pulse" />
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
-            <div>
-              <label className="block text-sm text-surface-400 mb-1">Date B</label>
+            <div className="card p-4">
+              <label className="block text-sm text-surface-400 mb-2">Date B</label>
               <select
                 value={compareDateB ?? ''}
                 onChange={(e) => setCompareDateB(e.target.value || null)}
-                className="w-full rounded border border-surface-200/20 bg-surface-800 px-3 py-2 text-white"
+                className="w-full rounded-xl border border-white/10 bg-surface-900/80 px-3 py-2 text-white focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30"
               >
                 <option value="">Select</option>
                 {dateOptions.map((d) => (
-                  <option key={d} value={d}>
-                    {format(new Date(d), 'MMM d, yyyy')}
-                  </option>
+                  <option key={d} value={d}>{format(new Date(d), 'MMM d, yyyy')}</option>
                 ))}
               </select>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {entriesB
-                  .filter((e) => e.mediaType === 'photo')
-                  .map((e) => (
-                    <div key={e.id}>
-                      {urls[e.id] ? (
-                        <img
-                          src={urls[e.id]}
-                          alt=""
-                          className="h-40 w-auto rounded object-cover"
-                        />
-                      ) : (
-                        <div className="h-40 w-24 rounded bg-surface-700 animate-pulse" />
-                      )}
-                    </div>
-                  ))}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {entriesB.filter((e) => e.mediaType === 'photo').map((e) => (
+                  <div key={e.id}>
+                    {urls[e.id] ? (
+                      <img src={urls[e.id]} alt="" className="h-40 w-auto rounded-xl object-cover border border-white/[0.06]" />
+                    ) : (
+                      <div className="h-40 w-24 rounded-xl bg-surface-700/80 animate-pulse" />
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -179,68 +159,35 @@ export default function MediaPage() {
         <>
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handlePrev}
-                className="rounded-lg border border-surface-200/20 px-4 py-2 text-sm font-medium text-white hover:bg-surface-800"
-              >
-                ← Prev
-              </button>
-              <span className="min-w-[140px] text-center font-medium text-white">
+              <button type="button" onClick={handlePrev} className="btn-ghost py-2">← Prev</button>
+              <span className="min-w-[140px] text-center font-medium text-white text-sm">
                 {format(new Date(selectedDate), 'EEE, MMM d')}
               </span>
-              <button
-                type="button"
-                onClick={handleNext}
-                className="rounded-lg border border-surface-200/20 px-4 py-2 text-sm font-medium text-white hover:bg-surface-800"
-              >
-                Next →
-              </button>
+              <button type="button" onClick={handleNext} className="btn-ghost py-2">Next →</button>
             </div>
-            <label className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-surface-900 cursor-pointer hover:bg-accent-dark">
+            <label className="btn-primary cursor-pointer inline-block py-2">
               {uploading ? 'Uploading…' : 'Add photo/video'}
-              <input
-                type="file"
-                accept="image/*,video/*"
-                onChange={handleFile}
-                className="hidden"
-                disabled={uploading}
-              />
+              <input type="file" accept="image/*,video/*" onChange={handleFile} className="hidden" disabled={uploading} />
             </label>
           </div>
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-400/90 rounded-lg bg-red-500/10 px-3 py-2">{error}</p>}
           <div className="flex flex-wrap gap-4">
             {displayEntries.map((entry) => (
-              <div
-                key={entry.id}
-                className="rounded-xl border border-surface-200/10 bg-surface-800 overflow-hidden"
-              >
+              <div key={entry.id} className="card overflow-hidden group">
                 {entry.mediaType === 'photo' ? (
                   urls[entry.id] ? (
-                    <img
-                      src={urls[entry.id]}
-                      alt=""
-                      className="h-48 w-auto object-cover"
-                    />
+                    <img src={urls[entry.id]} alt="" className="h-48 w-auto object-cover transition-transform group-hover:scale-[1.02]" />
                   ) : (
-                    <div className="h-48 w-32 bg-surface-700 animate-pulse" />
+                    <div className="h-48 w-32 bg-surface-700/80 animate-pulse" />
                   )
                 ) : urls[entry.id] ? (
-                  <video
-                    src={urls[entry.id]}
-                    controls
-                    className="h-48 max-w-xs object-contain"
-                  />
+                  <video src={urls[entry.id]} controls className="h-48 max-w-xs object-contain" />
                 ) : (
-                  <div className="h-48 w-32 bg-surface-700 animate-pulse" />
+                  <div className="h-48 w-32 bg-surface-700/80 animate-pulse" />
                 )}
-                <div className="p-2 flex justify-between items-center">
-                  <span className="text-xs text-surface-400">{entry.date}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(entry)}
-                    className="text-xs text-red-400 hover:text-red-300"
-                  >
+                <div className="p-3 flex justify-between items-center border-t border-white/[0.06]">
+                  <span className="text-xs text-surface-500">{entry.date}</span>
+                  <button type="button" onClick={() => handleDelete(entry)} className="text-xs text-red-400/90 hover:text-red-300 transition-colors">
                     Delete
                   </button>
                 </div>
