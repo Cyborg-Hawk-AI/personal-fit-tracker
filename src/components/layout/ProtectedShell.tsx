@@ -102,10 +102,10 @@ export default function ProtectedShell({ children }: { children: React.ReactNode
       </aside>
       {/* Main content */}
       <main
-        className="flex-1 flex flex-col min-h-screen transition-[margin] duration-200 ease-out"
+        className="relative z-0 flex-1 flex flex-col min-h-screen transition-[margin] duration-200 ease-out"
         style={{ marginLeft: sidebarOpen ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED }}
       >
-        <div className="flex-1 mx-auto w-full max-w-4xl p-4 md:p-6">{children}</div>
+        <div className="relative z-0 flex-1 mx-auto w-full max-w-4xl p-4 md:p-6">{children}</div>
       </main>
     </div>
   );

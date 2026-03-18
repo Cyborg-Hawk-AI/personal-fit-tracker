@@ -84,13 +84,13 @@ export default function WorkoutsPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight text-white">Workout</h1>
         <div className="flex items-center gap-2">
-          <button type="button" onClick={handlePrev} className="btn-ghost py-2">
+          <button type="button" onClick={handlePrev} className="btn-ghost py-2 cursor-pointer">
             ← Prev
           </button>
           <span className="min-w-[140px] text-center font-medium text-white text-sm">
             {format(new Date(selectedDate), 'EEE, MMM d')}
           </span>
-          <button type="button" onClick={handleNext} className="btn-ghost py-2">
+          <button type="button" onClick={handleNext} className="btn-ghost py-2 cursor-pointer">
             Next →
           </button>
         </div>
@@ -122,7 +122,7 @@ export default function WorkoutsPage() {
                     <button
                       type="button"
                       onClick={() => handleDoneWithDefaults(exIndex)}
-                      className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+                      className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
                         allDone
                           ? 'bg-accent text-surface-950 shadow-glow-accent-sm'
                           : 'btn-ghost py-2'
@@ -133,7 +133,7 @@ export default function WorkoutsPage() {
                     <button
                       type="button"
                       onClick={() => setExpandedCustom(showCustom ? null : exIndex)}
-                      className="rounded-xl border border-white/10 px-3 py-2 text-sm text-surface-400 hover:bg-white/5 hover:text-white transition-colors"
+                      className="cursor-pointer rounded-xl border border-white/10 px-3 py-2 text-sm text-surface-400 hover:bg-white/5 hover:text-white transition-colors"
                     >
                       {showCustom ? 'Hide custom' : 'Log custom'}
                     </button>
@@ -179,7 +179,7 @@ export default function WorkoutsPage() {
                         <button
                           type="button"
                           onClick={() => toggleSet(exIndex, setIndex)}
-                          className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                          className={`cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                             set.completed
                               ? 'bg-accent text-surface-950'
                               : 'border border-white/10 text-surface-400 hover:bg-white/5 hover:text-white'
