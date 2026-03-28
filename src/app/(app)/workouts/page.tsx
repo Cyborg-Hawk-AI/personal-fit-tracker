@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { format, addDays, subDays } from 'date-fns';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { format, addDays, subDays, parse } from 'date-fns';
 import {
   getWorkoutForDate,
   createWorkoutForDate,
@@ -21,7 +21,13 @@ function formatPrescription(ex: ExerciseLog): string {
   return `${setsReps} — ${intensity}`;
 }
 
+/** Parse YYYY-MM-DD as local calendar date. `new Date('yyyy-MM-dd')` is UTC and breaks add/sub in many timezones. */
+function parseYmd(ymd: string): Date {
+  return parse(ymd, 'yyyy-MM-dd', new Date());
+}
+
 export default function WorkoutsPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const dateParam = searchParams.get('date');
   const [selectedDate, setSelectedDate] = useState(() =>
@@ -36,7 +42,7 @@ export default function WorkoutsPage() {
 
   const load = useCallback(() => {
     let w = getWorkoutForDate(selectedDate);
-    const program = getProgramDayForDate(new Date(selectedDate));
+    const program = getProgramDayForDate(parseYmd(selectedDate));
     if (!w && program?.exercises.length) {
       w = createWorkoutForDate(selectedDate);
     }
@@ -48,8 +54,23 @@ export default function WorkoutsPage() {
     load();
   }, [load]);
 
-  const handlePrev = () => setSelectedDate((d) => format(subDays(new Date(d), 1), 'yyyy-MM-dd'));
-  const handleNext = () => setSelectedDate((d) => format(addDays(new Date(d), 1), 'yyyy-MM-dd'));
+  const goToDay = useCallback(
+    (ymd: string) => {
+      setSelectedDate(ymd);
+      router.replace(`/workouts?date=${ymd}`, { scroll: false });
+    },
+    [router]
+  );
+
+  const handlePrev = () => {
+    const prev = format(subDays(parseYmd(selectedDate), 1), 'yyyy-MM-dd');
+    goToDay(prev);
+  };
+
+  const handleNext = () => {
+    const next = format(addDays(parseYmd(selectedDate), 1), 'yyyy-MM-dd');
+    goToDay(next);
+  };
 
   const handleDoneWithDefaults = (exIndex: number) => {
     if (!workout) return;
@@ -77,7 +98,7 @@ export default function WorkoutsPage() {
     setWorkout(next);
   };
 
-  const programDay = getProgramDayForDate(new Date(selectedDate));
+  const programDay = getProgramDayForDate(parseYmd(selectedDate));
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -88,7 +109,7 @@ export default function WorkoutsPage() {
             ← Prev
           </button>
           <span className="min-w-[140px] text-center font-medium text-white text-sm">
-            {format(new Date(selectedDate), 'EEE, MMM d')}
+            {format(parseYmd(selectedDate), 'EEE, MMM d')}
           </span>
           <button type="button" onClick={handleNext} className="btn-ghost py-2 cursor-pointer">
             Next →
